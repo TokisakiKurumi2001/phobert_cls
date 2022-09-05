@@ -27,8 +27,8 @@ class PhoBERTForSeqClassifier(nn.Module):
     def __init__(self, num_classes):
         super(PhoBERTForSeqClassifier, self).__init__()
         self.phobert = RobertaModel.from_pretrained("vinai/phobert-base")
-        for p in self.phobert.parameters():
-            p.requires_grad = False
+        # for p in self.phobert.parameters():
+        #     p.requires_grad = False
         self.classifier = PhobertClassificationHead(self.phobert.config, num_classes)
     
     def forward(self, inputs):
