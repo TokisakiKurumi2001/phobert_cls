@@ -5,7 +5,7 @@ from phobert_cls import PhoBERTForSeqClassifier
 import torchmetrics
 
 class LitPhoBERForSeqClassifier(pl.LightningModule):
-    def __init__(self, num_classes: int):
+    def __init__(self, num_classes: int=5):
         super(LitPhoBERForSeqClassifier, self).__init__()
         self.phobert_cls = PhoBERTForSeqClassifier(num_classes)
         self.num_classes = num_classes
