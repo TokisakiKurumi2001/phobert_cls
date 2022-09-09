@@ -4,11 +4,11 @@ class SeqClassifierTokenizer:
     def __init__(self):
         self.tokenizer = PhobertTokenizer.from_pretrained("vinai/phobert-base")
         self.label2id = {
-            'Usual': 0,
-            'Social': 1,
-            'Politics': 2,
-            'Science': 3,
-            'Education': 4
+            'Education': 0,
+            'Politics': 1,
+            'Science': 2,
+            'Social': 3,
+            'Usual': 4
         }
         self.id2label = {v: k for k, v in self.label2id.items()}
 
