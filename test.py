@@ -1,22 +1,20 @@
-from phobert_cls import tokenizer, test_dataloader, PhoBERTForSeqClassifier, LitPhoBERForSeqClassifier
+from phobert_cls import tokenizer, test_dataloader, LitPhoBERForSeqClassifier
 import torch
+import pandas as pd
 
 if __name__ == "__main__":
-    # model = PhoBERTForSeqClassifier(num_classes=5)
-    # checkpoint = torch.load('./checkpoint/epoch=19-step=100.ckpt')
-    # print(checkpoint.keys())
-    # model.load_state_dict(torch.load('./checkpoint/epoch=19-step=100.ckpt')['phobert_cls'])
-    model = LitPhoBERForSeqClassifier(num_classes=5)
-    model.load_from_checkpoint('./checkpoint/epoch=19-step=100.ckpt')
+    model = LitPhoBERForSeqClassifier.load_from_checkpoint('./checkpoint/epoch=7-step=40.ckpt')
     model.eval()
-    predicts = []
+    model.freeze()
+    origin_sents = []
+    pred_labels = []
     print("Predicting")
     for batch in test_dataloader:
         sents = batch.pop('original_sents')
         logits = model.phobert_cls(batch)
         preds = torch.argmax(logits, dim=-1).tolist()
-        predicts.extend([(sent, tokenizer.convertId2Label(pred)) for sent, pred in zip(sents, preds)])
+        origin_sents.extend(sents)
+        pred_labels.extend([tokenizer.convertId2Label(pred) for pred in preds])
 
-    with open('predict.txt', 'w+') as file:
-        for number, pred in predicts:
-            file.write(f"{number}: {pred}\n")
+    df = pd.DataFrame({'vi_wseg': origin_sents, 'labels': pred_labels})
+    df.to_csv('predict.csv', index=False)
