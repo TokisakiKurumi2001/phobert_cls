@@ -5,13 +5,14 @@ from phobert_cls import PhoBERTForSeqClassifier
 import torchmetrics
 
 class LitPhoBERForSeqClassifier(pl.LightningModule):
-    def __init__(self, num_classes: int=5):
+    def __init__(self, num_classes: int):
         super(LitPhoBERForSeqClassifier, self).__init__()
         self.phobert_cls = PhoBERTForSeqClassifier(num_classes)
         self.num_classes = num_classes
         self.main_loss = nn.CrossEntropyLoss()
         self.train_acc = torchmetrics.Accuracy()
         self.valid_acc = torchmetrics.Accuracy()
+        self.save_hyperparameters()
 
     def training_step(self, batch, batch_idx):
         labels = batch.pop('labels')
